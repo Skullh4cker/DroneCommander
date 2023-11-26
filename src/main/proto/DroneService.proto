@@ -1,0 +1,152 @@
+syntax = "proto3";
+package com.example.grpc;
+
+service DroneService {
+  rpc SendArmDisarm (ArmDisarm) returns (LongAnswer);
+  rpc SendChangeFlightMode (ChangeFlightMode) returns (LongAnswer);
+  rpc SendNavTakeoff (NavTakeoff) returns (LongAnswer);
+  rpc SendReturnToLaunch (ReturnToLaunch) returns (LongAnswer);
+  rpc SendStartMission (StartMission) returns (LongAnswer);
+  rpc SendClearAllMissions (ClearAllMissions) returns (MissionAnswer);
+  rpc SendFlightPlan (FlightPlan) returns (MissionAnswer);
+  rpc GetHeartbeat (HeartbeatRequest) returns (Heartbeat);
+  rpc GetDetailedData (DetailedDataRequest) returns (DetailedData);
+}
+
+enum CommandResult {
+  ACCEPTED = 0;
+  TEMPORARILY_REJECTED = 1;
+  DENIED = 2;
+  UNSUPPORTED = 3;
+  FAILED = 4;
+  IN_PROGRESS = 5;
+  CANCELLED = 6;
+  COMMAND_LONG_ONLY = 7;
+  COMMAND_INT_ONLY = 8;
+  COMMAND_UNSUPPORTED_MAV_FRAME = 9;
+}
+
+enum MissionResult {
+  MISSION_ACCEPTED = 0;
+  MISSION_ERROR = 1;
+  MISSION_UNSUPPORTED_FRAME = 2;
+  MISSION_UNSUPPORTED = 3;
+  MISSION_NO_SPACE = 4;
+  MISSION_INVALID = 5;
+  MISSION_INVALID_PARAM1 = 6;
+  MISSION_INVALID_PARAM2 = 7;
+  MISSION_INVALID_PARAM3 = 8;
+  MISSION_INVALID_PARAM4 = 9;
+  MISSION_INVALID_PARAM5_X = 10;
+  MISSION_INVALID_PARAM6_Y = 11;
+  MISSION_INVALID_PARAM7 = 12;
+  MISSION_INVALID_SEQUENCE = 13;
+  MISSION_DENIED = 14;
+  MISSION_OPERATION_CANCELLED = 15;
+}
+
+enum AutopilotModes {
+  STABILIZE = 0; 
+  ACRO = 1;
+  ALT_HOLD = 2; 
+  AUTO = 3; 
+  GUIDED = 4; 
+  LOITER = 5; 
+  RTL = 6; 
+  CIRCLE = 7; 
+  POSITION = 8; 
+  LAND = 9; 
+  OF_LOITER = 10; 
+  DRIFT = 11; 
+  SPORT = 12;
+  FLIP = 13;
+  AUTOTUNE = 14; 
+  POSHOLD = 15; 
+  BRAKE = 16; 
+  THROW = 17; 
+  AVOID_ADSB = 18; 
+  GUIDED_NOGPS = 19; 
+  SMART_RTL = 20; 
+  FLOWHOLD = 21; 
+  FOLLOW = 22; 
+  ZIGZAG = 23; 
+  SYSTEMID = 24; 
+  AUTOROTATE = 25; 
+  AUTO_RTL = 26;
+}
+
+message Geocode {
+  float latitude = 1;
+  float longitude = 2;
+  float altitude = 3;
+}
+
+message FlightPlan {
+  repeated Geocode flightPlan = 1;
+  float holdTime = 2;
+  float acceptRadius = 3;
+}
+
+message StartMission { }
+
+message ClearAllMissions { }
+
+message HeartbeatRequest { }
+
+message Heartbeat {
+  int32 type = 1;
+  int32 autopilot = 2;
+  int32 baseMode = 3;
+  int32 customMode = 4;
+  int32 systemStatus = 5;
+  int32 mavlinkVersion = 6;
+}
+
+message DetailedDataRequest { }
+
+message DetailedData {
+  float voltageBattery = 1;
+  float batteryRemaining = 2;
+  float latitude = 3;
+  float longitude = 4;
+  float absoluteAltitude = 5;
+  float relativeAltitude = 6;
+  float heading = 7;
+  float roll = 8;
+  float pitch = 9;
+  float yaw = 10;
+  float rollSpeed = 11;
+  float pitchSpeed = 12;
+  float yawSpeed = 13;
+  int32 currentMission = 14;
+  int32 missionCount = 15;
+  float vx = 16;
+  float vy = 17;
+  float vz = 18;
+}
+
+message ChangeFlightMode {
+  AutopilotModes mode = 1;
+}
+
+message ArmDisarm {
+  float arm = 1;
+}
+
+message NavTakeoff {
+  float pitch = 1;
+  float yaw = 2;
+  float latitude = 3;
+  float longitude = 4;
+  float altitude = 5;
+}
+
+message ReturnToLaunch { }
+
+message LongAnswer {
+  CommandResult result = 1;
+}
+
+message MissionAnswer {
+  MissionResult result = 1;
+}
