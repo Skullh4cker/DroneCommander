@@ -21,6 +21,8 @@ public class Commander {
         UpdateHeartbeat();
         UpdateDetailedData();
     }
+    public Commander(){
+    }
     public void ArmDisarm(int arm){
         ArmDisarm request = ArmDisarm.newBuilder().setArm(arm).build();
         LongAnswer response = stub.sendArmDisarm(request);
@@ -63,6 +65,12 @@ public class Commander {
     public void UpdateDetailedData(){
         DetailedDataRequest request = DetailedDataRequest.newBuilder().build();
         detailedData = stub.getDetailedData(request);
+    }
+    public Heartbeat GetHeartbeat(){
+        return heartbeat;
+    }
+    public DetailedData GetDetailedData(){
+        return detailedData;
     }
     public List<Geocode> GetGeocodesFromArray(@NotNull double[][] coords){
         for (double[] cord : coords) {
